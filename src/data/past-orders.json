@@ -11,7 +11,8 @@
           "price": 89.99,
           "quantity": 1,
           "imageUrl": "https://cdn.shopify.com/mock-images/denim-jacket-blue.jpg",
-          "shopName": "Urban Outfitters"
+          "shopName": "Urban Outfitters",
+          "postDescription": "I love this jacket! It's so comfortable and stylish. I've been wearing it all the time."
         }
       ],
       "totalAmount": 89.99
@@ -23,11 +24,12 @@
       "items": [
         {
           "productId": "PROD002",
-          "name": "Nike Air Max 270",
+          "name": "Nike Shoes",
           "price": 150.00,
           "quantity": 1,
           "imageUrl": "https://cdn.shopify.com/mock-images/nike-airmax-white.jpg",
-          "shopName": "Nike Store"
+          "shopName": "Nike Store",
+          "postDescription": "This pair of sneakers are very comfortable to wear. I can run in them all day long."
         }
       ],
       "totalAmount": 150.00
@@ -75,7 +77,8 @@
           "price": 79.99,
           "quantity": 1,
           "imageUrl": "https://cdn.shopify.com/mock-images/leather-bag-brown.jpg",
-          "shopName": "Fashion Forward"
+          "shopName": "Fashion Forward",
+          "postDescription": "This bag is perfect for carrying my essentials. It's stylish and durable."
         }
       ],
       "totalAmount": 79.99
@@ -83,7 +86,7 @@
     {
       "orderId": "ORD-2024-006",
       "orderDate": "2024-03-11T10:15:00Z",
-      "status": "shipped",
+      "status": "delivered",
       "items": [
         {
           "productId": "PROD006",
@@ -91,7 +94,8 @@
           "price": 199.99,
           "quantity": 1,
           "imageUrl": "https://cdn.shopify.com/mock-images/headphones-silver.jpg",
-          "shopName": "Audio Excellence"
+          "shopName": "Audio Excellence",
+          "postDescription": "These headphones are amazing! They have great sound quality and noise-canceling features."
         }
       ],
       "totalAmount": 199.99
