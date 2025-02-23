@@ -1,0 +1,100 @@
+{
+  "pastOrders": [
+    {
+      "orderId": "ORD-2024-001",
+      "orderDate": "2024-03-10T14:23:15Z",
+      "status": "delivered",
+      "items": [
+        {
+          "productId": "PROD001",
+          "name": "Vintage Denim Jacket",
+          "price": 89.99,
+          "quantity": 1,
+          "imageUrl": "https://cdn.shopify.com/mock-images/denim-jacket-blue.jpg",
+          "shopName": "Urban Outfitters"
+        }
+      ],
+      "totalAmount": 89.99
+    },
+    {
+      "orderId": "ORD-2024-002",
+      "orderDate": "2024-02-28T09:45:30Z",
+      "status": "delivered",
+      "items": [
+        {
+          "productId": "PROD002",
+          "name": "Nike Air Max 270",
+          "price": 150.00,
+          "quantity": 1,
+          "imageUrl": "https://cdn.shopify.com/mock-images/nike-airmax-white.jpg",
+          "shopName": "Nike Store"
+        }
+      ],
+      "totalAmount": 150.00
+    },
+    {
+      "orderId": "ORD-2024-003",
+      "orderDate": "2024-03-08T16:12:00Z",
+      "status": "in_transit",
+      "items": [
+        {
+          "productId": "PROD003",
+          "name": "Organic Cotton T-Shirt",
+          "price": 29.99,
+          "quantity": 2,
+          "imageUrl": "https://cdn.shopify.com/mock-images/cotton-tshirt-black.jpg",
+          "shopName": "Eco Clothing Co."
+        }
+      ],
+      "totalAmount": 59.98
+    },
+    {
+      "orderId": "ORD-2024-004",
+      "orderDate": "2024-03-12T11:30:45Z",
+      "status": "processing",
+      "items": [
+        {
+          "productId": "PROD004",
+          "name": "Smart Watch Series 5",
+          "price": 299.99,
+          "quantity": 1,
+          "imageUrl": "https://cdn.shopify.com/mock-images/smartwatch-black.jpg",
+          "shopName": "Tech Galaxy"
+        }
+      ],
+      "totalAmount": 299.99
+    },
+    {
+      "orderId": "ORD-2024-005",
+      "orderDate": "2024-02-15T13:20:10Z",
+      "status": "delivered",
+      "items": [
+        {
+          "productId": "PROD005",
+          "name": "Leather Crossbody Bag",
+          "price": 79.99,
+          "quantity": 1,
+          "imageUrl": "https://cdn.shopify.com/mock-images/leather-bag-brown.jpg",
+          "shopName": "Fashion Forward"
+        }
+      ],
+      "totalAmount": 79.99
+    },
+    {
+      "orderId": "ORD-2024-006",
+      "orderDate": "2024-03-11T10:15:00Z",
+      "status": "shipped",
+      "items": [
+        {
+          "productId": "PROD006",
+          "name": "Wireless Noise-Canceling Headphones",
+          "price": 199.99,
+          "quantity": 1,
+          "imageUrl": "https://cdn.shopify.com/mock-images/headphones-silver.jpg",
+          "shopName": "Audio Excellence"
+        }
+      ],
+      "totalAmount": 199.99
+    }
+  ]
+} 

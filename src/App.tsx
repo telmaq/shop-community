@@ -3,7 +3,9 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack'
 import {HomeScreen} from './screens/HomeScreen'
 import {NativeFeaturesScreen} from './screens/NativeFeaturesScreen'
 import {StoriesScreen} from './screens/stories/StoriesScreen'
+import {OrderHistoryScreen} from './screens/stories/OrderHistoryScreen'
 import {StoryCommentsScreen} from './screens/stories/StoryCommentsScreen'
+import {CreatePostScreen} from './screens/stories/CreatePostScreen'
 
 const Stack = createNativeStackNavigator()
 
@@ -33,6 +35,16 @@ export function App() {
       <Stack.Screen
         name="Stories.Comments"
         component={StoryCommentsScreen}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="Orders.History"
+        component={OrderHistoryScreen}
+        options={{title: 'Order History'}}
+      />
+      <Stack.Screen
+        name="Stories.CreatePost"
+        component={CreatePostScreen}
         options={{headerShown: false}}
       />
     </Stack.Navigator>

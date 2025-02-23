@@ -32,7 +32,7 @@ export function OpenPhotosButton({
   return (
     <Button
       rightIcon="camera"
-      text="Add pictures"
+      text="Add Pictures"
       onPress={handleImageSelection}
     />
   )

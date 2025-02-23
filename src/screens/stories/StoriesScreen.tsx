@@ -39,7 +39,7 @@ const createMockStory = (path: string): Story => {
   return {
     id: Math.random().toString(),
     userId: MOCK_USERS.sarah.id,
-    username: 'Sarah K.',
+    username: 'Shirley F.',
     userAvatar:
       'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRHqQAhr87cf9o3nfPj42O4loQ1oz8FBJIfJkYckRg2gjzwwu4BT3lqa4NVTDQpzIn7LFRhLPl9LJFL6qp_9i_f-A',
     images: [path],
@@ -48,6 +48,7 @@ const createMockStory = (path: string): Story => {
     likes: Math.floor(Math.random() * 200),
     comments: Math.floor(Math.random() * 20),
     isLiked: false,
+    hasProductLink: true,
   }
 }
 
@@ -152,10 +153,13 @@ export function StoriesScreen({
     navigation.goBack()
   }
 
-  const handleCreateStory = () => {
-    navigation.navigate('Stories.Create')
-  }
+  // const handleCreateStory = () => {
+  //   navigation.navigate('Stories.Create')
+  // }
 
+  const handleHistoryPress = () => {
+    navigation.navigate('Orders.History')
+  }
   const handleStoryPress = (storyId: string) => {
     navigation.navigate('Stories.Comments', {storyId})
   }
@@ -196,7 +200,7 @@ export function StoriesScreen({
         <Text fontSize={20} fontWeight="bold">
           Shop Stories
         </Text>
-        <PressableAnimated onPress={handleCreateStory}>
+        <PressableAnimated onPress={handleHistoryPress}>
           <Icon name="add" />
         </PressableAnimated>
       </View>
