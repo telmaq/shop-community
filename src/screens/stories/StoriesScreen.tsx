@@ -89,13 +89,13 @@ function StoryCard({
       <View style={styles.userInfo}>
         <Avatar source={{uri: story.userAvatar}} title={story.username} />
         <Text style={styles.username}>{story.username}</Text>
-        {showDelete && (
+        {showDelete && onDelete ? (
           <Box flex={1} alignItems="flex-end">
             <PressableAnimated onPress={onDelete}>
-              <Icon name="delete" color="critical" />
+              <Icon name="delete" color="error" />
             </PressableAnimated>
           </Box>
-        )}
+        ) : null}
       </View>
 
       <Carousel
