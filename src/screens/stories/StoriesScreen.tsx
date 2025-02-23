@@ -50,6 +50,7 @@ const createMockStory = (path: string): Story => {
       "This sweater is amazing! The quality is outstanding and it's so warm.",
     likes: 0,
     comments: 0,
+    hasProductLink: true,
     isLiked: false,
   }
 }
