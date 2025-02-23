@@ -8,6 +8,7 @@ import {
   Avatar,
 } from '@shopify/shop-minis-platform-sdk'
 import type {NativeStackNavigationProp} from '@react-navigation/native-stack'
+import {useState} from 'react'
 
 interface Story {
   id: string
@@ -17,18 +18,20 @@ interface Story {
   caption: string
   likes: number
   comments: number
+  isLiked?: boolean
 }
 
 const MOCK_STORIES: Story[] = [
   {
     id: '1',
     username: 'Sarah K.',
-    userAvatar: 'https://placekitten.com/100/100',
-    image: 'https://placekitten.com/400/400',
+    userAvatar: 'https://ui-avatars.com/api/?name=Sarah+K&background=random',
+    image: 'https://picsum.photos/400/400',
     caption:
       "This sweater is amazing! The quality is outstanding and it's so warm.",
     likes: 42,
     comments: 12,
+    isLiked: false,
   },
   // Add more mock stories here
 ]
@@ -36,9 +39,10 @@ const MOCK_STORIES: Story[] = [
 interface StoryCardProps {
   story: Story
   onPress: () => void
+  onLike: () => void
 }
 
-function StoryCard({story, onPress}: StoryCardProps) {
+function StoryCard({story, onPress, onLike}: StoryCardProps) {
   return (
     <PressableAnimated onPress={onPress}>
       <View style={styles.card}>
@@ -52,14 +56,17 @@ function StoryCard({story, onPress}: StoryCardProps) {
         <Text style={styles.caption}>{story.caption}</Text>
 
         <View style={styles.engagement}>
-          <View style={styles.engagementItem}>
-            <Icon name="heart" />
-            <Text>{story.likes}</Text>
-          </View>
-          <View style={styles.engagementItem}>
+          <PressableAnimated onPress={onLike} style={styles.engagementItem}>
+            <Icon
+              name="heart"
+              color={story.isLiked ? 'primary-button-background' : undefined}
+            />
+            <Text style={styles.engagementText}>{story.likes}</Text>
+          </PressableAnimated>
+          <PressableAnimated onPress={onPress} style={styles.engagementItem}>
             <Icon name="chat" />
-            <Text>{story.comments}</Text>
-          </View>
+            <Text style={styles.engagementText}>{story.comments}</Text>
+          </PressableAnimated>
         </View>
       </View>
     </PressableAnimated>
@@ -71,6 +78,8 @@ export function StoriesScreen({
 }: {
   navigation: NativeStackNavigationProp<any>
 }) {
+  const [stories, setStories] = useState<Story[]>(MOCK_STORIES)
+
   const handleCreateStory = () => {
     navigation.navigate('Stories.Create')
   }
@@ -78,6 +87,28 @@ export function StoriesScreen({
   const handleStoryPress = (storyId: string) => {
     navigation.navigate('Stories.Detail', {storyId})
   }
+
+  const handleLike = (storyId: string) => {
+    setStories(prevStories =>
+      prevStories.map(story =>
+        story.id === storyId
+          ? {
+              ...story,
+              isLiked: !story.isLiked,
+              likes: story.isLiked ? story.likes - 1 : story.likes + 1,
+            }
+          : story
+      )
+    )
+  }
+
+  const renderItem = ({item}: {item: Story}) => (
+    <StoryCard
+      story={item}
+      onPress={() => handleStoryPress(item.id)}
+      onLike={() => handleLike(item.id)}
+    />
+  )
 
   return (
     <SafeAreaView style={styles.container}>
@@ -89,11 +120,9 @@ export function StoriesScreen({
       </View>
 
       <FlatList
-        data={MOCK_STORIES}
+        data={stories}
         keyExtractor={item => item.id}
-        renderItem={({item}) => (
-          <StoryCard story={item} onPress={() => handleStoryPress(item.id)} />
-        )}
+        renderItem={renderItem}
         contentContainerStyle={styles.content}
       />
     </SafeAreaView>
@@ -153,5 +182,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginRight: 16,
+  },
+  engagementText: {
+    marginLeft: 4,
   },
 })
