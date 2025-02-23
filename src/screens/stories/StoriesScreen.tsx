@@ -1,4 +1,10 @@
-import {StyleSheet, FlatList, View, TouchableOpacity, Dimensions} from 'react-native'
+import {
+  StyleSheet,
+  FlatList,
+  View,
+  TouchableOpacity,
+  Dimensions,
+} from 'react-native'
 import {useState, useEffect} from 'react'
 import {
   SafeAreaView,
@@ -11,11 +17,10 @@ import {
   useAsyncStorage,
 } from '@shopify/shop-minis-platform-sdk'
 import type {NativeStackNavigationProp} from '@react-navigation/native-stack'
-
-import {OpenPhotosButton} from '../openPhotosButton'
 import Carousel from 'react-native-reanimated-carousel'
 
-import {MOCK_STORIES} from '../../data/mock-data'
+import {OpenPhotosButton} from '../openPhotosButton'
+import {MOCK_STORIES, MOCK_USERS} from '../../data/mock-data'
 
 interface Story {
   id: string
@@ -33,6 +38,7 @@ interface Story {
 const createMockStory = (path: string): Story => {
   return {
     id: Math.random().toString(),
+    userId: MOCK_USERS.sarah.id,
     username: 'Sarah K.',
     userAvatar:
       'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRHqQAhr87cf9o3nfPj42O4loQ1oz8FBJIfJkYckRg2gjzwwu4BT3lqa4NVTDQpzIn7LFRhLPl9LJFL6qp_9i_f-A',
@@ -41,8 +47,10 @@ const createMockStory = (path: string): Story => {
       "This sweater is amazing! The quality is outstanding and it's so warm.",
     likes: Math.floor(Math.random() * 200),
     comments: Math.floor(Math.random() * 20),
+    isLiked: false,
   }
 }
+
 interface StoryCardProps {
   story: Story
   onPress: () => void
@@ -74,13 +82,13 @@ function StoryCard({story, onPress, onLike}: StoryCardProps) {
         pagingEnabled
       />
 
-        <Text style={styles.caption}>{story.caption}</Text>
+      <Text style={styles.caption}>{story.caption}</Text>
 
-        {Boolean(story.hasProductLink) && (
-          <Box padding="m" style={styles.productLink}>
-            <Text>View Product →</Text>
-          </Box>
-        )}
+      {Boolean(story.hasProductLink) && (
+        <Box padding="m" style={styles.productLink}>
+          <Text>View Product →</Text>
+        </Box>
+      )}
 
       <View style={styles.engagement}>
         <PressableAnimated onPress={onLike} style={styles.engagementItem}>
@@ -105,7 +113,7 @@ export function StoriesScreen({
   navigation: NativeStackNavigationProp<any>
 }) {
   const [imageUrls, setImageUrls] = useState<string[]>([])
-  const [stories, setStories] = useState<Story[]>([])
+  const [stories, setStories] = useState<Story[]>(MOCK_STORIES)
   const {getItem, setItem} = useAsyncStorage()
 
   useEffect(() => {
