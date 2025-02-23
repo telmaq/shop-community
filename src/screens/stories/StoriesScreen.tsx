@@ -8,6 +8,7 @@ import {
   Icon,
   Avatar,
   Box,
+  useAsyncStorage,
 } from '@shopify/shop-minis-platform-sdk'
 import type {NativeStackNavigationProp} from '@react-navigation/native-stack'
 
@@ -100,9 +101,23 @@ export function StoriesScreen({
 }) {
   const [imageUrls, setImageUrls] = useState<string[]>([])
   const [stories, setStories] = useState<Story[]>([])
-  const handleCreateStory = () => {
-    navigation.navigate('Stories.Create')
-  }
+  const {getItem, setItem} = useAsyncStorage()
+
+  useEffect(() => {
+    return () => {
+      setItem('urls', JSON.stringify(imageUrls))
+    }
+  }, [imageUrls, setItem])
+
+  useEffect(() => {
+    const loadUrls = async () => {
+      const storedUrls = await getItem('urls')
+      if (storedUrls) {
+        setImageUrls(JSON.parse(storedUrls))
+      }
+    }
+    loadUrls()
+  }, [getItem, setItem])
 
   useEffect(() => {
     setStories(prevStories => [
@@ -111,6 +126,14 @@ export function StoriesScreen({
     ])
   }, [imageUrls])
 
+  const handleBack = () => {
+    navigation.goBack()
+  }
+
+  const handleCreateStory = () => {
+    navigation.navigate('Stories.Create')
+  }
+
   const handleStoryPress = (storyId: string) => {
     navigation.navigate('Stories.Detail', {storyId})
   }
@@ -118,19 +141,22 @@ export function StoriesScreen({
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.title}>Shop Stories</Text>
+        <TouchableOpacity
+          onPress={handleBack}
+          accessibilityLabel="Navigate back"
+        >
+          <Box marginTop="xs">
+            <Icon name="arrow-left" />
+          </Box>
+        </TouchableOpacity>
+        <Text fontSize={20} fontWeight="bold">
+          Shop Stories
+        </Text>
         <PressableAnimated onPress={handleCreateStory}>
           <Icon name="add" />
         </PressableAnimated>
       </View>
-      <TouchableOpacity
-        onPress={() => navigation.goBack()}
-        accessibilityLabel="Navigate back"
-      >
-        <Box marginTop="xs">
-          <Icon name="arrow-left" />
-        </Box>
-      </TouchableOpacity>
+
       <FlatList
         data={stories}
         keyExtractor={item => item.id}
