@@ -21,6 +21,7 @@ interface Story {
   caption: string
   likes: number
   comments: number
+  hasProductLink?: boolean
 }
 
 const MOCK_STORIES: Story[] = [
@@ -33,6 +34,7 @@ const MOCK_STORIES: Story[] = [
       "This sweater is amazing! The quality is outstanding and it's so warm.",
     likes: 42,
     comments: 12,
+    hasProductLink: true,
   },
   // Add more mock stories here
 ]
@@ -54,6 +56,12 @@ function StoryCard({story, onPress}: StoryCardProps) {
         <Image source={{uri: story.image}} style={styles.mainImage} />
 
         <Text style={styles.caption}>{story.caption}</Text>
+
+        {Boolean(story.hasProductLink) && (
+          <Box padding="m" style={styles.productLink}>
+            <Text>View Product →</Text>
+          </Box>
+        )}
 
         <View style={styles.engagement}>
           <View style={styles.engagementItem}>
@@ -168,5 +176,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginRight: 16,
+  },
+  productLink: {
+    borderTopWidth: 1,
+    borderTopColor: '#F0F1F2',
   },
 })
