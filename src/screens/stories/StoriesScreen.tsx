@@ -44,32 +44,30 @@ interface StoryCardProps {
 
 function StoryCard({story, onPress, onLike}: StoryCardProps) {
   return (
-    <PressableAnimated onPress={onPress}>
-      <View style={styles.card}>
-        <View style={styles.userInfo}>
-          <Avatar source={{uri: story.userAvatar}} title={story.username} />
-          <Text style={styles.username}>{story.username}</Text>
-        </View>
-
-        <Image source={{uri: story.image}} style={styles.mainImage} />
-
-        <Text style={styles.caption}>{story.caption}</Text>
-
-        <View style={styles.engagement}>
-          <PressableAnimated onPress={onLike} style={styles.engagementItem}>
-            <Icon
-              name="heart"
-              color={story.isLiked ? 'primary-button-background' : undefined}
-            />
-            <Text style={styles.engagementText}>{story.likes}</Text>
-          </PressableAnimated>
-          <PressableAnimated onPress={onPress} style={styles.engagementItem}>
-            <Icon name="chat" />
-            <Text style={styles.engagementText}>{story.comments}</Text>
-          </PressableAnimated>
-        </View>
+    <View style={styles.card}>
+      <View style={styles.userInfo}>
+        <Avatar source={{uri: story.userAvatar}} title={story.username} />
+        <Text style={styles.username}>{story.username}</Text>
       </View>
-    </PressableAnimated>
+
+      <Image source={{uri: story.image}} style={styles.mainImage} />
+
+      <Text style={styles.caption}>{story.caption}</Text>
+
+      <View style={styles.engagement}>
+        <PressableAnimated onPress={onLike} style={styles.engagementItem}>
+          <Icon
+            name="heart"
+            color={story.isLiked ? 'primary-button-background' : undefined}
+          />
+          <Text style={styles.engagementText}>{story.likes}</Text>
+        </PressableAnimated>
+        <PressableAnimated onPress={onPress} style={styles.engagementItem}>
+          <Icon name="chat" />
+          <Text style={styles.engagementText}>{story.comments}</Text>
+        </PressableAnimated>
+      </View>
+    </View>
   )
 }
 
