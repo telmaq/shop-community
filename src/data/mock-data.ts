@@ -19,6 +19,11 @@ export const MOCK_USERS = {
     username: 'Alex M.',
     avatar: 'https://ui-avatars.com/api/?name=Alex+M&background=random',
   },
+  shirley: {
+    id: 'user5',
+    username: 'Shirley F.',
+    avatar: 'https://ui-avatars.com/api/?name=Shirley+F&background=random',
+  },
 } as const
 
 export interface Comment {
