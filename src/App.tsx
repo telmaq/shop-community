@@ -1,5 +1,4 @@
 import {createNativeStackNavigator} from '@react-navigation/native-stack'
-import type {ParamListBase} from '@react-navigation/native'
 
 import {HomeScreen} from './screens/HomeScreen'
 import {NativeFeaturesScreen} from './screens/NativeFeaturesScreen'
