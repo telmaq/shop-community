@@ -1,4 +1,10 @@
-import {StyleSheet, FlatList, View, TouchableOpacity} from 'react-native'
+import {
+  StyleSheet,
+  FlatList,
+  View,
+  TouchableOpacity,
+  Dimensions,
+} from 'react-native'
 import {useState, useEffect} from 'react'
 import {
   SafeAreaView,
@@ -11,86 +17,93 @@ import {
   useAsyncStorage,
 } from '@shopify/shop-minis-platform-sdk'
 import type {NativeStackNavigationProp} from '@react-navigation/native-stack'
+import Carousel from 'react-native-reanimated-carousel'
 
 import {OpenPhotosButton} from '../openPhotosButton'
+import {MOCK_STORIES, MOCK_USERS} from '../../data/mock-data'
 
 interface Story {
   id: string
   username: string
   userAvatar: string
-  image: string
+  images: string[]
   caption: string
   likes: number
   comments: number
   hasProductLink?: boolean
+  isLiked?: boolean
+  userId: string
 }
-
-const MOCK_STORIES: Story[] = [
-  {
-    id: '1',
-    username: 'Sarah K.',
-    userAvatar:
-      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRHqQAhr87cf9o3nfPj42O4loQ1oz8FBJIfJkYckRg2gjzwwu4BT3lqa4NVTDQpzIn7LFRhLPl9LJFL6qp_9i_f-A',
-    image:
-      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRHqQAhr87cf9o3nfPj42O4loQ1oz8FBJIfJkYckRg2gjzwwu4BT3lqa4NVTDQpzIn7LFRhLPl9LJFL6qp_9i_f-A',
-    caption:
-      "This sweater is amazing! The quality is outstanding and it's so warm.",
-    likes: 42,
-    comments: 12,
-    hasProductLink: true,
-  },
-  // Add more mock stories here
-]
 
 const createMockStory = (path: string): Story => {
   return {
     id: Math.random().toString(),
+    userId: MOCK_USERS.sarah.id,
     username: 'Sarah K.',
     userAvatar:
       'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRHqQAhr87cf9o3nfPj42O4loQ1oz8FBJIfJkYckRg2gjzwwu4BT3lqa4NVTDQpzIn7LFRhLPl9LJFL6qp_9i_f-A',
-    image: path,
+    images: [path],
     caption:
       "This sweater is amazing! The quality is outstanding and it's so warm.",
     likes: Math.floor(Math.random() * 200),
     comments: Math.floor(Math.random() * 20),
+    isLiked: false,
   }
 }
+
 interface StoryCardProps {
   story: Story
   onPress: () => void
+  onLike: () => void
 }
 
-function StoryCard({story, onPress}: StoryCardProps) {
+function StoryCard({story, onPress, onLike}: StoryCardProps) {
+  const width = Dimensions.get('window').width - 32 // Account for padding
+
   return (
-    <PressableAnimated onPress={onPress}>
-      <View style={styles.card}>
-        <View style={styles.userInfo}>
-          <Avatar source={{uri: story.userAvatar}} title={story.username} />
-          <Text style={styles.username}>{story.username}</Text>
-        </View>
-
-        <Image source={{uri: story.image}} style={styles.mainImage} />
-
-        <Text style={styles.caption}>{story.caption}</Text>
-
-        {Boolean(story.hasProductLink) && (
-          <Box padding="m" style={styles.productLink}>
-            <Text>View Product →</Text>
-          </Box>
-        )}
-
-        <View style={styles.engagement}>
-          <View style={styles.engagementItem}>
-            <Icon name="heart" />
-            <Text>{story.likes}</Text>
-          </View>
-          <View style={styles.engagementItem}>
-            <Icon name="chat" />
-            <Text>{story.comments}</Text>
-          </View>
-        </View>
+    <View style={styles.card}>
+      <View style={styles.userInfo}>
+        <Avatar source={{uri: story.userAvatar}} title={story.username} />
+        <Text style={styles.username}>{story.username}</Text>
       </View>
-    </PressableAnimated>
+
+      <Carousel
+        data={story.images}
+        renderItem={({item}) => (
+          <Image
+            source={{uri: item}}
+            style={styles.mainImage}
+            resizeMode="cover"
+          />
+        )}
+        width={width}
+        height={width}
+        loop={false}
+        pagingEnabled
+      />
+
+      <Text style={styles.caption}>{story.caption}</Text>
+
+      {Boolean(story.hasProductLink) && (
+        <Box padding="m" style={styles.productLink}>
+          <Text>View Product →</Text>
+        </Box>
+      )}
+
+      <View style={styles.engagement}>
+        <PressableAnimated onPress={onLike} style={styles.engagementItem}>
+          <Icon
+            name="heart"
+            color={story.isLiked ? 'primary-button-background' : undefined}
+          />
+          <Text style={styles.engagementText}>{story.likes}</Text>
+        </PressableAnimated>
+        <PressableAnimated onPress={onPress} style={styles.engagementItem}>
+          <Icon name="chat" />
+          <Text style={styles.engagementText}>{story.comments}</Text>
+        </PressableAnimated>
+      </View>
+    </View>
   )
 }
 
@@ -100,30 +113,39 @@ export function StoriesScreen({
   navigation: NativeStackNavigationProp<any>
 }) {
   const [imageUrls, setImageUrls] = useState<string[]>([])
-  const [stories, setStories] = useState<Story[]>([])
+  const [stories, setStories] = useState<Story[]>(MOCK_STORIES)
   const {getItem, setItem} = useAsyncStorage()
 
+  // Load saved URLs only once on mount
+  useEffect(() => {
+    const loadUrls = async () => {
+      const storedUrls = await getItem('urls')
+      if (storedUrls) {
+        const urls = JSON.parse(storedUrls)
+        setImageUrls(urls)
+        // Create stories from saved URLs
+        setStories(prev => [
+          ...MOCK_STORIES,
+          ...urls.map(url => createMockStory(url)),
+        ])
+      }
+    }
+    loadUrls()
+  }, [getItem]) // Only depend on getItem
+
+  // Save URLs when component unmounts
   useEffect(() => {
     return () => {
       setItem('urls', JSON.stringify(imageUrls))
     }
   }, [imageUrls, setItem])
 
+  // Only update stories when new URLs are added
   useEffect(() => {
-    const loadUrls = async () => {
-      const storedUrls = await getItem('urls')
-      if (storedUrls) {
-        setImageUrls(JSON.parse(storedUrls))
-      }
+    const lastUrl = imageUrls[imageUrls.length - 1]
+    if (lastUrl) {
+      setStories(prev => [...prev, createMockStory(lastUrl)])
     }
-    loadUrls()
-  }, [getItem, setItem])
-
-  useEffect(() => {
-    setStories(prevStories => [
-      ...prevStories,
-      ...imageUrls.map(url => createMockStory(url)),
-    ])
   }, [imageUrls])
 
   const handleBack = () => {
@@ -135,8 +157,30 @@ export function StoriesScreen({
   }
 
   const handleStoryPress = (storyId: string) => {
-    navigation.navigate('Stories.Detail', {storyId})
+    navigation.navigate('Stories.Comments', {storyId})
   }
+
+  const handleLike = (storyId: string) => {
+    setStories(prev =>
+      prev.map(story =>
+        story.id === storyId
+          ? {
+              ...story,
+              isLiked: !story.isLiked,
+              likes: story.isLiked ? story.likes - 1 : story.likes + 1,
+            }
+          : story
+      )
+    )
+  }
+
+  const renderItem = ({item}: {item: Story}) => (
+    <StoryCard
+      story={item}
+      onPress={() => handleStoryPress(item.id)}
+      onLike={() => handleLike(item.id)}
+    />
+  )
 
   return (
     <SafeAreaView style={styles.container}>
@@ -160,9 +204,7 @@ export function StoriesScreen({
       <FlatList
         data={stories}
         keyExtractor={item => item.id}
-        renderItem={({item}) => (
-          <StoryCard story={item} onPress={() => handleStoryPress(item.id)} />
-        )}
+        renderItem={renderItem}
         contentContainerStyle={styles.content}
       />
       <Box paddingHorizontal="section" paddingBottom="gutter">
@@ -210,7 +252,7 @@ const styles = StyleSheet.create({
   },
   mainImage: {
     width: '100%',
-    height: 400,
+    aspectRatio: 1,
   },
   caption: {
     padding: 12,
@@ -229,5 +271,8 @@ const styles = StyleSheet.create({
   productLink: {
     borderTopWidth: 1,
     borderTopColor: '#F0F1F2',
+  },
+  engagementText: {
+    marginLeft: 4,
   },
 })
