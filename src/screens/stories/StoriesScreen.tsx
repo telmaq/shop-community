@@ -5,7 +5,7 @@ import {
   TouchableOpacity,
   Dimensions,
 } from 'react-native'
-import {useState, useEffect} from 'react'
+import {useState, useEffect, useMemo} from 'react'
 import {
   SafeAreaView,
   Text,
@@ -15,6 +15,7 @@ import {
   Avatar,
   Box,
   useAsyncStorage,
+  Button,
   ProductLink,
   useProductSearch,
 } from '@shopify/shop-minis-platform-sdk'
@@ -40,17 +41,16 @@ interface Story {
 const createMockStory = (path: string): Story => {
   return {
     id: Math.random().toString(),
-    userId: MOCK_USERS.sarah.id,
-    username: 'Shirley F.',
+    userId: MOCK_USERS.shirley.id,
+    username: MOCK_USERS.shirley.username,
     userAvatar:
       'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRHqQAhr87cf9o3nfPj42O4loQ1oz8FBJIfJkYckRg2gjzwwu4BT3lqa4NVTDQpzIn7LFRhLPl9LJFL6qp_9i_f-A',
     images: [path],
     caption:
       "This sweater is amazing! The quality is outstanding and it's so warm.",
-    likes: Math.floor(Math.random() * 200),
-    comments: Math.floor(Math.random() * 20),
+    likes: 0,
+    comments: 0,
     isLiked: false,
-    hasProductLink: true,
   }
 }
 
@@ -58,10 +58,18 @@ interface StoryCardProps {
   story: Story
   onPress: () => void
   onLike: () => void
+  showDelete?: boolean
+  onDelete?: () => void
 }
 
-function StoryCard({story, onPress, onLike}: StoryCardProps) {
-  const width = Dimensions.get('window').width - 32 // Account for padding
+function StoryCard({
+  story,
+  onPress,
+  onLike,
+  showDelete,
+  onDelete,
+}: StoryCardProps) {
+  const width = Dimensions.get('window').width - 32
 
   const {products} = useProductSearch({
     query: 'skateboard',
@@ -80,6 +88,13 @@ function StoryCard({story, onPress, onLike}: StoryCardProps) {
       <View style={styles.userInfo}>
         <Avatar source={{uri: story.userAvatar}} title={story.username} />
         <Text style={styles.username}>{story.username}</Text>
+        {showDelete && (
+          <Box flex={1} alignItems="flex-end">
+            <PressableAnimated onPress={onDelete}>
+              <Icon name="delete" color="critical" />
+            </PressableAnimated>
+          </Box>
+        )}
       </View>
 
       <Carousel
@@ -120,13 +135,17 @@ function StoryCard({story, onPress, onLike}: StoryCardProps) {
   )
 }
 
+type StoryFilter = 'all' | 'mine'
+
 export function StoriesScreen({
   navigation,
+  route,
 }: {
   navigation: NativeStackNavigationProp<any>
 }) {
   const [imageUrls, setImageUrls] = useState<string[]>([])
   const [stories, setStories] = useState<Story[]>(MOCK_STORIES)
+  const [filter, setFilter] = useState<StoryFilter>('all')
   const {getItem, setItem} = useAsyncStorage()
 
   // Load saved URLs only once on mount
@@ -136,15 +155,19 @@ export function StoriesScreen({
       if (storedUrls) {
         const urls = JSON.parse(storedUrls)
         setImageUrls(urls)
-        // Create stories from saved URLs
-        setStories(prev => [
-          ...MOCK_STORIES,
-          ...urls.map(url => createMockStory(url)),
-        ])
+        // Create stories once, combining mock and saved stories
+        setStories([...MOCK_STORIES, ...urls.map(url => createMockStory(url))])
       }
     }
     loadUrls()
-  }, [getItem]) // Only depend on getItem
+  }, [getItem])
+
+  // Add this effect to handle new stories from CreatePostScreen
+  useEffect(() => {
+    if (route.params?.newStory) {
+      setStories(prev => [route.params.newStory, ...prev])
+    }
+  }, [route.params?.newStory])
 
   // Save URLs when component unmounts
   useEffect(() => {
@@ -153,25 +176,18 @@ export function StoriesScreen({
     }
   }, [imageUrls, setItem])
 
-  // Only update stories when new URLs are added
-  useEffect(() => {
-    const lastUrl = imageUrls[imageUrls.length - 1]
-    if (lastUrl) {
-      setStories(prev => [...prev, createMockStory(lastUrl)])
-    }
-  }, [imageUrls])
-
   const handleBack = () => {
     navigation.goBack()
   }
 
-  // const handleCreateStory = () => {
-  //   navigation.navigate('Stories.Create')
-  // }
+  const handleCreateStory = () => {
+    navigation.navigate('Stories.CreatePost')
+  }
 
   const handleHistoryPress = () => {
     navigation.navigate('Orders.History')
   }
+
   const handleStoryPress = (storyId: string) => {
     navigation.navigate('Stories.Comments', {storyId})
   }
@@ -190,11 +206,41 @@ export function StoriesScreen({
     )
   }
 
+  const handleDelete = (storyId: string) => {
+    setStories(prev => prev.filter(story => story.id !== storyId))
+    // Also remove the image URL if it exists
+    const storyToDelete = stories.find(story => story.id === storyId)
+    if (storyToDelete?.images[0]) {
+      setImageUrls(prev =>
+        prev.filter(url => !storyToDelete.images.includes(url))
+      )
+    }
+  }
+
+  const handleNewImage = (newImageUrls: string[]) => {
+    // Create a new story for each new image
+    const lastUrl = newImageUrls[newImageUrls.length - 1]
+    if (lastUrl) {
+      const newStory = createMockStory(lastUrl)
+      setStories(prev => [newStory, ...prev])
+      setImageUrls(newImageUrls)
+    }
+  }
+
+  const filteredStories = useMemo(() => {
+    if (filter === 'mine') {
+      return stories.filter(story => story.userId === MOCK_USERS.shirley.id)
+    }
+    return stories
+  }, [stories, filter])
+
   const renderItem = ({item}: {item: Story}) => (
     <StoryCard
       story={item}
       onPress={() => handleStoryPress(item.id)}
       onLike={() => handleLike(item.id)}
+      showDelete={filter === 'mine' && item.userId === MOCK_USERS.shirley.id}
+      onDelete={() => handleDelete(item.id)}
     />
   )
 
@@ -217,15 +263,37 @@ export function StoriesScreen({
         </PressableAnimated>
       </View>
 
+      <View style={styles.filterContainer}>
+        <Button
+          variant={filter === 'all' ? 'primary' : 'tertiary'}
+          text="All Stories"
+          onPress={() => setFilter('all')}
+          size="s"
+        />
+        <Box marginLeft="xs">
+          <Button
+            variant={filter === 'mine' ? 'primary' : 'tertiary'}
+            text="My Stories"
+            onPress={() => setFilter('mine')}
+            size="s"
+          />
+        </Box>
+      </View>
+
       <FlatList
-        data={stories}
+        data={filteredStories}
         keyExtractor={item => item.id}
         renderItem={renderItem}
         contentContainerStyle={styles.content}
       />
-      <Box paddingHorizontal="section" paddingBottom="gutter">
-        <OpenPhotosButton imageUrls={imageUrls} setImageUrls={setImageUrls} />
-      </Box>
+      {filter === 'mine' && (
+        <Box paddingHorizontal="section" paddingBottom="gutter">
+          <OpenPhotosButton 
+            imageUrls={imageUrls} 
+            setImageUrls={handleNewImage}
+          />
+        </Box>
+      )}
     </SafeAreaView>
   )
 }
@@ -262,6 +330,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     padding: 12,
+    flex: 1,
   },
   username: {
     marginLeft: 8,
@@ -290,5 +359,12 @@ const styles = StyleSheet.create({
   },
   engagementText: {
     marginLeft: 4,
+  },
+  filterContainer: {
+    flexDirection: 'row',
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    borderBottomWidth: 1,
+    borderBottomColor: '#F0F1F2',
   },
 })

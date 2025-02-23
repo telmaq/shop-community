@@ -44,6 +44,16 @@ export function HomeScreen() {
       style={{flex: 1, backgroundColor: theme.colors['backgrounds-regular']}}
     >
       <ScrollView>
+        <Box marginTop="s">
+          <Button
+            text="Explore Stories"
+            size="l"
+            onPress={() => {
+              navigation.navigate('Stories.Feed')
+            }}
+          />
+        </Box>
+
         <Box
           flex={1}
           paddingHorizontal="gutter"
@@ -121,15 +131,6 @@ export function HomeScreen() {
               navigation.navigate('GettingStarted.NativeFeatures')
             }}
           />
-          <Box marginTop="s">
-            <Button
-              text="Explore Stories"
-              size="l"
-              onPress={() => {
-                navigation.navigate('Stories.Feed')
-              }}
-            />
-          </Box>
         </Box>
       </ScrollView>
     </SafeAreaView>
