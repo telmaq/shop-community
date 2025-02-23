@@ -1,4 +1,4 @@
-import {StyleSheet, FlatList, View} from 'react-native'
+import {StyleSheet, FlatList, View, Dimensions} from 'react-native'
 import {
   SafeAreaView,
   Text,
@@ -6,35 +6,22 @@ import {
   Image,
   Icon,
   Avatar,
+  useProductSearch,
 } from '@shopify/shop-minis-platform-sdk'
 import type {NativeStackNavigationProp} from '@react-navigation/native-stack'
 import {useState} from 'react'
+import Carousel from 'react-native-reanimated-carousel'
 
 interface Story {
   id: string
   username: string
   userAvatar: string
-  image: string
+  images: string[]
   caption: string
   likes: number
   comments: number
   isLiked?: boolean
 }
-
-const MOCK_STORIES: Story[] = [
-  {
-    id: '1',
-    username: 'Sarah K.',
-    userAvatar: 'https://ui-avatars.com/api/?name=Sarah+K&background=random',
-    image: 'https://picsum.photos/400/400',
-    caption:
-      "This sweater is amazing! The quality is outstanding and it's so warm.",
-    likes: 42,
-    comments: 12,
-    isLiked: false,
-  },
-  // Add more mock stories here
-]
 
 interface StoryCardProps {
   story: Story
@@ -43,6 +30,8 @@ interface StoryCardProps {
 }
 
 function StoryCard({story, onPress, onLike}: StoryCardProps) {
+  const width = Dimensions.get('window').width - 32 // Account for padding
+
   return (
     <View style={styles.card}>
       <View style={styles.userInfo}>
@@ -50,7 +39,20 @@ function StoryCard({story, onPress, onLike}: StoryCardProps) {
         <Text style={styles.username}>{story.username}</Text>
       </View>
 
-      <Image source={{uri: story.image}} style={styles.mainImage} />
+      <Carousel
+        data={story.images}
+        renderItem={({item}) => (
+          <Image
+            source={{uri: item}}
+            style={styles.mainImage}
+            resizeMode="cover"
+          />
+        )}
+        width={width}
+        height={width}
+        loop={false}
+        pagingEnabled
+      />
 
       <Text style={styles.caption}>{story.caption}</Text>
 
@@ -71,38 +73,89 @@ function StoryCard({story, onPress, onLike}: StoryCardProps) {
   )
 }
 
+const BLANK_IMAGE =
+  'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7'
+
+const MOCK_STORIES: Omit<Story, 'caption'>[] = [
+  {
+    id: '1',
+    username: 'Sarah K.',
+    userAvatar: 'https://ui-avatars.com/api/?name=Sarah+K&background=random',
+    images: [
+      'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=800',
+      'https://images.unsplash.com/photo-1483985988355-763728e1935b?w=800',
+    ],
+    likes: 42,
+    comments: 12,
+    isLiked: false,
+  },
+  {
+    id: '2',
+    username: 'John D.',
+    userAvatar: 'https://ui-avatars.com/api/?name=John+D&background=random',
+    images: [
+      'https://images.unsplash.com/photo-1475180098004-ca77a66827be?w=800',
+    ],
+    likes: 10,
+    comments: 10,
+    isLiked: false,
+  },
+  // Add more mock stories here
+]
+
 export function StoriesScreen({
   navigation,
 }: {
   navigation: NativeStackNavigationProp<any>
 }) {
-  const [stories, setStories] = useState<Story[]>(MOCK_STORIES)
+  const {products} = useProductSearch({
+    query: 'sweater',
+    first: 4,
+    filters: {
+      minimumRating: 4,
+      price: {
+        min: 150,
+        max: 250,
+      },
+    },
+  })
+
+  const [likedStories, setLikedStories] = useState<{[key: string]: boolean}>({})
+  const [likeCounts, setLikeCounts] = useState<{[key: string]: number}>(() =>
+    MOCK_STORIES.reduce((acc, story) => ({...acc, [story.id]: story.likes}), {})
+  )
 
   const handleCreateStory = () => {
     navigation.navigate('Stories.Create')
   }
 
   const handleStoryPress = (storyId: string) => {
-    navigation.navigate('Stories.Detail', {storyId})
+    navigation.navigate('Stories.Comments', {storyId})
   }
 
   const handleLike = (storyId: string) => {
-    setStories(prevStories =>
-      prevStories.map(story =>
-        story.id === storyId
-          ? {
-              ...story,
-              isLiked: !story.isLiked,
-              likes: story.isLiked ? story.likes - 1 : story.likes + 1,
-            }
-          : story
-      )
-    )
+    setLikedStories(prev => ({
+      ...prev,
+      [storyId]: !prev[storyId],
+    }))
+    setLikeCounts(prev => ({
+      ...prev,
+      [storyId]: prev[storyId] + (likedStories[storyId] ? -1 : 1),
+    }))
   }
+
+  const stories: Story[] = MOCK_STORIES.map((story, index) => ({
+    ...story,
+    caption: products?.[index]?.title ?? 'Loading...',
+    likes: likeCounts[story.id],
+  }))
 
   const renderItem = ({item}: {item: Story}) => (
     <StoryCard
-      story={item}
+      story={{
+        ...item,
+        isLiked: likedStories[item.id],
+      }}
       onPress={() => handleStoryPress(item.id)}
       onLike={() => handleLike(item.id)}
     />
@@ -165,7 +218,7 @@ const styles = StyleSheet.create({
   },
   mainImage: {
     width: '100%',
-    height: 400,
+    aspectRatio: 1,
   },
   caption: {
     padding: 12,

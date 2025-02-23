@@ -18,7 +18,7 @@ interface Comment {
   timestamp: string
 }
 
-export function StoryDetailScreen({
+export function StoryCommentsScreen({
   navigation,
 }: {
   route: any

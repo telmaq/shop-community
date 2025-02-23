@@ -3,7 +3,7 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack'
 import {HomeScreen} from './screens/HomeScreen'
 import {NativeFeaturesScreen} from './screens/NativeFeaturesScreen'
 import {StoriesScreen} from './screens/stories/StoriesScreen'
-import {StoryDetailScreen} from './screens/stories/StoryDetailScreen'
+import {StoryCommentsScreen} from './screens/stories/StoryCommentsScreen'
 
 const Stack = createNativeStackNavigator()
 
@@ -31,8 +31,8 @@ export function App() {
         options={{title: 'Share Your Story'}}
       />
       <Stack.Screen
-        name="Stories.Detail"
-        component={StoryDetailScreen}
+        name="Stories.Comments"
+        component={StoryCommentsScreen}
         options={{headerShown: false}}
       />
     </Stack.Navigator>
