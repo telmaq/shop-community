@@ -68,8 +68,8 @@ export const MOCK_STORIES = [
     username: MOCK_USERS.sarah.username,
     userAvatar: MOCK_USERS.sarah.avatar,
     images: [
-      'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=800',
-      'https://images.unsplash.com/photo-1483985988355-763728e1935b?w=800',
+      'https://images.unsplash.com/photo-1539109136881-3be0616acf4b?w=800',
+      'https://images.unsplash.com/photo-1485462537746-965f33f7f6a7?w=800',
     ],
     caption: 'Love this new collection! The quality is amazing 😍',
     likes: 42,
@@ -82,8 +82,8 @@ export const MOCK_STORIES = [
     username: MOCK_USERS.john.username,
     userAvatar: MOCK_USERS.john.avatar,
     images: [
-      'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=800',
-      'https://images.unsplash.com/photo-1483985988355-763728e1935b?w=800',
+      'https://images.unsplash.com/photo-1509631179647-0177331693ae?w=800',
+      'https://images.unsplash.com/photo-1495121605193-b116b5b9c5fe?w=800',
     ],
     caption: 'Perfect fit and super comfortable 👌',
     likes: 28,
@@ -96,8 +96,8 @@ export const MOCK_STORIES = [
     username: MOCK_USERS.emily.username,
     userAvatar: MOCK_USERS.emily.avatar,
     images: [
-      'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=800',
-      'https://images.unsplash.com/photo-1483985988355-763728e1935b?w=800',
+      'https://images.unsplash.com/photo-1558769132-cb1aea458c5e?w=800',
+      'https://images.unsplash.com/photo-1445205170230-053b83016050?w=800',
     ],
     caption: 'Perfect fit and super comfortable 👌',
     likes: 28,
