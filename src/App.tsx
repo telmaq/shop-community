@@ -3,6 +3,7 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack'
 import {HomeScreen} from './screens/HomeScreen'
 import {NativeFeaturesScreen} from './screens/NativeFeaturesScreen'
 import {StoriesScreen} from './screens/stories/StoriesScreen'
+import {CreatePostScreen} from './screens/stories/CreatePostScreen'
 
 const Stack = createNativeStackNavigator()
 
@@ -33,6 +34,11 @@ export function App() {
         name="Stories.Detail" 
         component={NativeFeaturesScreen}
         options={{title: 'Story'}}
+      />
+      <Stack.Screen
+        name="Stories.CreatePost"
+        component={CreatePostScreen}
+        options={{headerShown: false}}
       />
 
     </Stack.Navigator>

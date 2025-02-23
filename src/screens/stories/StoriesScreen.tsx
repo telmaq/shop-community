@@ -100,9 +100,9 @@ export function StoriesScreen({
 }) {
   const [imageUrls, setImageUrls] = useState<string[]>([])
   const [stories, setStories] = useState<Story[]>([])
-  const handleCreateStory = () => {
-    navigation.navigate('Stories.Create')
-  }
+  // const handleCreateStory = () => {
+  //   navigation.navigate('Stories.Create')
+  // }
 
   useEffect(() => {
     setStories(prevStories => [
