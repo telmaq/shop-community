@@ -139,6 +139,7 @@ type StoryFilter = 'all' | 'mine'
 
 export function StoriesScreen({
   navigation,
+  route,
 }: {
   navigation: NativeStackNavigationProp<any>
 }) {
@@ -161,16 +162,12 @@ export function StoriesScreen({
     loadUrls()
   }, [getItem])
 
-  // Add this new effect to handle only new additions
+  // Add this effect to handle new stories from CreatePostScreen
   useEffect(() => {
-    if (imageUrls.length > 0) {
-      const lastUrl = imageUrls[imageUrls.length - 1]
-      const storyExists = stories.some(story => story.images.includes(lastUrl))
-      if (!storyExists) {
-        setStories(prev => [...prev, createMockStory(lastUrl)])
-      }
+    if (route.params?.newStory) {
+      setStories(prev => [route.params.newStory, ...prev])
     }
-  }, [imageUrls, stories]) // Add both dependencies
+  }, [route.params?.newStory])
 
   // Save URLs when component unmounts
   useEffect(() => {
@@ -217,6 +214,16 @@ export function StoriesScreen({
       setImageUrls(prev =>
         prev.filter(url => !storyToDelete.images.includes(url))
       )
+    }
+  }
+
+  const handleNewImage = (newImageUrls: string[]) => {
+    // Create a new story for each new image
+    const lastUrl = newImageUrls[newImageUrls.length - 1]
+    if (lastUrl) {
+      const newStory = createMockStory(lastUrl)
+      setStories(prev => [newStory, ...prev])
+      setImageUrls(newImageUrls)
     }
   }
 
@@ -281,7 +288,10 @@ export function StoriesScreen({
       />
       {filter === 'mine' && (
         <Box paddingHorizontal="section" paddingBottom="gutter">
-          <OpenPhotosButton imageUrls={imageUrls} setImageUrls={setImageUrls} />
+          <OpenPhotosButton 
+            imageUrls={imageUrls} 
+            setImageUrls={handleNewImage}
+          />
         </Box>
       )}
     </SafeAreaView>
