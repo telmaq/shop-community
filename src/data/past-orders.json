@@ -7,12 +7,11 @@
       "items": [
         {
           "productId": "PROD001",
-          "name": "Vintage Denim Jacket",
+          "name": "Classic Skateboard",
           "price": 89.99,
           "quantity": 1,
-          "imageUrl": "https://cdn.shopify.com/mock-images/denim-jacket-blue.jpg",
-          "shopName": "Urban Outfitters",
-          "postDescription": "I love this jacket! It's so comfortable and stylish. I've been wearing it all the time."
+          "imageUrl": "https://images.unsplash.com/photo-1547447134-cd3f5c716030",
+          "shopName": "Urban Outfitters"
         }
       ],
       "totalAmount": 89.99
@@ -27,9 +26,8 @@
           "name": "Nike Shoes",
           "price": 150.00,
           "quantity": 1,
-          "imageUrl": "https://cdn.shopify.com/mock-images/nike-airmax-white.jpg",
-          "shopName": "Nike Store",
-          "postDescription": "This pair of sneakers are very comfortable to wear. I can run in them all day long."
+          "imageUrl": "https://images.unsplash.com/photo-1542291026-7eec264c27ff",
+          "shopName": "Nike Store"
         }
       ],
       "totalAmount": 150.00
@@ -37,14 +35,14 @@
     {
       "orderId": "ORD-2024-003",
       "orderDate": "2024-03-08T16:12:00Z",
-      "status": "in_transit",
+      "status": "delivered",
       "items": [
         {
           "productId": "PROD003",
           "name": "Organic Cotton T-Shirt",
           "price": 29.99,
           "quantity": 2,
-          "imageUrl": "https://cdn.shopify.com/mock-images/cotton-tshirt-black.jpg",
+          "imageUrl": "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab",
           "shopName": "Eco Clothing Co."
         }
       ],
@@ -53,14 +51,14 @@
     {
       "orderId": "ORD-2024-004",
       "orderDate": "2024-03-12T11:30:45Z",
-      "status": "processing",
+      "status": "delivered",
       "items": [
         {
           "productId": "PROD004",
           "name": "Smart Watch Series 5",
           "price": 299.99,
           "quantity": 1,
-          "imageUrl": "https://cdn.shopify.com/mock-images/smartwatch-black.jpg",
+          "imageUrl": "https://images.unsplash.com/photo-1579586337278-3befd40fd17a",
           "shopName": "Tech Galaxy"
         }
       ],
@@ -76,9 +74,8 @@
           "name": "Leather Crossbody Bag",
           "price": 79.99,
           "quantity": 1,
-          "imageUrl": "https://cdn.shopify.com/mock-images/leather-bag-brown.jpg",
-          "shopName": "Fashion Forward",
-          "postDescription": "This bag is perfect for carrying my essentials. It's stylish and durable."
+          "imageUrl": "https://images.unsplash.com/photo-1548036328-c9fa89d128fa",
+          "shopName": "Fashion Forward"
         }
       ],
       "totalAmount": 79.99
@@ -93,9 +90,8 @@
           "name": "Wireless Noise-Canceling Headphones",
           "price": 199.99,
           "quantity": 1,
-          "imageUrl": "https://cdn.shopify.com/mock-images/headphones-silver.jpg",
-          "shopName": "Audio Excellence",
-          "postDescription": "These headphones are amazing! They have great sound quality and noise-canceling features."
+          "imageUrl": "https://images.unsplash.com/photo-1505740420928-5e560c06d30e",
+          "shopName": "Audio Excellence"
         }
       ],
       "totalAmount": 199.99
