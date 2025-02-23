@@ -1,16 +1,27 @@
 import {Box, SafeAreaView} from '@shopify/shop-minis-platform-sdk'
-import {useState} from 'react'
 import {StyleSheet} from 'react-native'
+import type {NativeStackNavigationProp} from '@react-navigation/native-stack'
 
 import {OpenPhotosButton} from '../openPhotosButton'
 
-export function CreatePostScreen() {
-  const [imageUrls, setImageUrls] = useState<string[]>([])
-
+export function CreatePostScreen({
+  navigation,
+  route,
+}: {
+  navigation: NativeStackNavigationProp<any>
+  route: {params: {setImageUrls: (urls: string[]) => void, imageUrls: string[]}}
+}) {
+  const {imageUrls, setImageUrls} = route.params
   return (
     <SafeAreaView style={styles.container}>
       <Box style={styles.buttonContainer}>
-        <OpenPhotosButton imageUrls={imageUrls} setImageUrls={setImageUrls} />
+        <OpenPhotosButton
+          imageUrls={imageUrls}
+          setImageUrls={setImageUrls}
+          onSuccess={() => {
+            navigation.navigate('Stories.Feed')
+          }}
+        />
       </Box>
     </SafeAreaView>
   )
