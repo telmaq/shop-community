@@ -21,6 +21,46 @@ export const MOCK_USERS = {
   },
 } as const
 
+export interface Comment {
+  id: string
+  userId: string
+  username: string
+  userAvatar: string
+  text: string
+  timestamp: string
+}
+
+export const MOCK_COMMENTS: Record<string, Comment[]> = {
+  '1': [
+    {
+      id: 'c1',
+      userId: MOCK_USERS.alex.id,
+      username: MOCK_USERS.alex.username,
+      userAvatar: MOCK_USERS.alex.avatar,
+      text: 'Great find! How is the sizing?',
+      timestamp: '2h ago',
+    },
+    {
+      id: 'c2',
+      userId: MOCK_USERS.emily.id,
+      username: MOCK_USERS.emily.username,
+      userAvatar: MOCK_USERS.emily.avatar,
+      text: 'Love the style! 😍',
+      timestamp: '1h ago',
+    },
+  ],
+  '2': [
+    {
+      id: 'c3',
+      userId: MOCK_USERS.sarah.id,
+      username: MOCK_USERS.sarah.username,
+      userAvatar: MOCK_USERS.sarah.avatar,
+      text: 'Perfect for summer!',
+      timestamp: '30m ago',
+    },
+  ],
+}
+
 export const MOCK_STORIES = [
   {
     id: '1',
@@ -33,7 +73,7 @@ export const MOCK_STORIES = [
     ],
     caption: 'Love this new collection! The quality is amazing 😍',
     likes: 42,
-    comments: 12,
+    comments: MOCK_COMMENTS['1']?.length ?? 0,
     isLiked: false,
   },
   {
@@ -47,7 +87,7 @@ export const MOCK_STORIES = [
     ],
     caption: 'Perfect fit and super comfortable 👌',
     likes: 28,
-    comments: 8,
+    comments: MOCK_COMMENTS['2']?.length ?? 0,
     isLiked: false,
   },
   {
@@ -61,7 +101,7 @@ export const MOCK_STORIES = [
     ],
     caption: 'Perfect fit and super comfortable 👌',
     likes: 28,
-    comments: 8,
+    comments: MOCK_COMMENTS['3']?.length ?? 0,
     isLiked: false,
   },
 ]

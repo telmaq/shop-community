@@ -10,30 +10,19 @@ import {
 } from '@shopify/shop-minis-platform-sdk'
 import type {NativeStackNavigationProp} from '@react-navigation/native-stack'
 
-interface Comment {
-  id: string
-  username: string
-  userAvatar: string
-  text: string
-  timestamp: string
-}
+import {MOCK_COMMENTS, MOCK_USERS, Comment} from '../../data/mock-data'
 
 export function StoryCommentsScreen({
+  route,
   navigation,
 }: {
-  route: any
+  route: {params: {storyId: string}}
   navigation: NativeStackNavigationProp<any>
 }) {
   const [newComment, setNewComment] = useState('')
-  const [comments, setComments] = useState<Comment[]>([
-    {
-      id: '1',
-      username: 'Alex M.',
-      userAvatar: 'https://placekitten.com/100/100',
-      text: 'Great find! How is the sizing?',
-      timestamp: '2h ago',
-    },
-  ])
+  const [comments, setComments] = useState<Comment[]>(
+    MOCK_COMMENTS[route.params.storyId] || []
+  )
 
   const handleAddComment = () => {
     if (!newComment.trim()) return
@@ -41,8 +30,9 @@ export function StoryCommentsScreen({
     setComments(prev => [
       {
         id: Date.now().toString(),
-        username: 'You',
-        userAvatar: 'https://placekitten.com/100/100',
+        userId: MOCK_USERS.sarah.id, // Using Sarah as current user
+        username: MOCK_USERS.sarah.username,
+        userAvatar: MOCK_USERS.sarah.avatar,
         text: newComment,
         timestamp: 'Just now',
       },
