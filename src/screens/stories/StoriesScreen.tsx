@@ -124,9 +124,9 @@ export function StoriesScreen({
         const urls = JSON.parse(storedUrls)
         setImageUrls(urls)
         // Create stories from saved URLs
-        setStories(prev => [
+        setStories(() => [
           ...MOCK_STORIES,
-          ...urls.map(url => createMockStory(url)),
+          ...urls.map((url: string) => createMockStory(url)),
         ])
       }
     }
