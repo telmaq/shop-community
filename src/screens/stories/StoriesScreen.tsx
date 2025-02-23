@@ -1,4 +1,5 @@
-import {StyleSheet, FlatList, View} from 'react-native'
+import {StyleSheet, FlatList, View, TouchableOpacity} from 'react-native'
+import {useState} from 'react'
 import {
   SafeAreaView,
   Text,
@@ -6,8 +7,11 @@ import {
   Image,
   Icon,
   Avatar,
+  Box,
 } from '@shopify/shop-minis-platform-sdk'
 import type {NativeStackNavigationProp} from '@react-navigation/native-stack'
+
+import {OpenPhotosButton} from '../openPhotosButton'
 
 interface Story {
   id: string
@@ -71,6 +75,7 @@ export function StoriesScreen({
 }: {
   navigation: NativeStackNavigationProp<any>
 }) {
+  const [imageUrls, setImageUrls] = useState<string[]>([])
   const handleCreateStory = () => {
     navigation.navigate('Stories.Create')
   }
@@ -87,7 +92,14 @@ export function StoriesScreen({
           <Icon name="add" />
         </PressableAnimated>
       </View>
-
+      <TouchableOpacity
+        onPress={() => navigation.goBack()}
+        accessibilityLabel="Navigate back"
+      >
+        <Box marginTop="xs">
+          <Icon name="arrow-left" />
+        </Box>
+      </TouchableOpacity>
       <FlatList
         data={MOCK_STORIES}
         keyExtractor={item => item.id}
@@ -96,6 +108,9 @@ export function StoriesScreen({
         )}
         contentContainerStyle={styles.content}
       />
+      <Box paddingHorizontal="section" paddingBottom="gutter">
+        <OpenPhotosButton imageUrls={imageUrls} setImageUrls={setImageUrls} />
+      </Box>
     </SafeAreaView>
   )
 }
