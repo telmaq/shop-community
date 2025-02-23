@@ -116,27 +116,36 @@ export function StoriesScreen({
   const [stories, setStories] = useState<Story[]>(MOCK_STORIES)
   const {getItem, setItem} = useAsyncStorage()
 
+  // Load saved URLs only once on mount
+  useEffect(() => {
+    const loadUrls = async () => {
+      const storedUrls = await getItem('urls')
+      if (storedUrls) {
+        const urls = JSON.parse(storedUrls)
+        setImageUrls(urls)
+        // Create stories from saved URLs
+        setStories(prev => [
+          ...MOCK_STORIES,
+          ...urls.map(url => createMockStory(url)),
+        ])
+      }
+    }
+    loadUrls()
+  }, [getItem]) // Only depend on getItem
+
+  // Save URLs when component unmounts
   useEffect(() => {
     return () => {
       setItem('urls', JSON.stringify(imageUrls))
     }
   }, [imageUrls, setItem])
 
+  // Only update stories when new URLs are added
   useEffect(() => {
-    const loadUrls = async () => {
-      const storedUrls = await getItem('urls')
-      if (storedUrls) {
-        setImageUrls(JSON.parse(storedUrls))
-      }
+    const lastUrl = imageUrls[imageUrls.length - 1]
+    if (lastUrl) {
+      setStories(prev => [...prev, createMockStory(lastUrl)])
     }
-    loadUrls()
-  }, [getItem, setItem])
-
-  useEffect(() => {
-    setStories(prevStories => [
-      ...prevStories,
-      ...imageUrls.map(url => createMockStory(url)),
-    ])
   }, [imageUrls])
 
   const handleBack = () => {
