@@ -1,0 +1,9 @@
+query ProductVariantsRenderBefore {
+  product {
+    id
+    title
+  }
+  shop {
+    id
+  }
+}
