@@ -121,13 +121,15 @@ export function HomeScreen() {
               navigation.navigate('GettingStarted.NativeFeatures')
             }}
           />
-          <Button
-            text="Explore Stories"
-            size="l"
-            onPress={() => {
-              navigation.navigate('Stories.Feed')
-            }}
-          />
+          <Box marginTop="s">
+            <Button
+              text="Explore Stories"
+              size="l"
+              onPress={() => {
+                navigation.navigate('Stories.Feed')
+              }}
+            />
+          </Box>
         </Box>
       </ScrollView>
     </SafeAreaView>
