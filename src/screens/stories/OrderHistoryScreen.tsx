@@ -47,7 +47,7 @@ export const OrderHistoryScreen = ({navigation}: OrderHistoryScreenProps) => {
       {
         text: 'Yes!',
         onPress: () => {
-          navigation.navigate('Stories.Create', {product: item})
+          navigation.navigate('Stories.CreatePost', {product: item})
         },
       },
     ])

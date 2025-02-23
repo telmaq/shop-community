@@ -5,6 +5,7 @@ import {NativeFeaturesScreen} from './screens/NativeFeaturesScreen'
 import {StoriesScreen} from './screens/stories/StoriesScreen'
 import {OrderHistoryScreen} from './screens/stories/OrderHistoryScreen'
 import {StoryCommentsScreen} from './screens/stories/StoryCommentsScreen'
+import {CreatePostScreen} from './screens/stories/CreatePostScreen'
 
 const Stack = createNativeStackNavigator()
 
@@ -40,6 +41,11 @@ export function App() {
         name="Orders.History"
         component={OrderHistoryScreen}
         options={{title: 'Order History'}}
+      />
+      <Stack.Screen
+        name="Stories.CreatePost"
+        component={CreatePostScreen}
+        options={{headerShown: false}}
       />
     </Stack.Navigator>
   )

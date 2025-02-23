@@ -153,9 +153,9 @@ export function StoriesScreen({
     navigation.goBack()
   }
 
-  const handleCreateStory = () => {
-    navigation.navigate('Stories.Create')
-  }
+  // const handleCreateStory = () => {
+  //   navigation.navigate('Stories.Create')
+  // }
 
   const handleHistoryPress = () => {
     navigation.navigate('Orders.History')
