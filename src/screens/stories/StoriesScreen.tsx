@@ -1,5 +1,5 @@
 import {StyleSheet, FlatList, View, TouchableOpacity} from 'react-native'
-import {useState} from 'react'
+import {useState, useEffect} from 'react'
 import {
   SafeAreaView,
   Text,
@@ -28,8 +28,10 @@ const MOCK_STORIES: Story[] = [
   {
     id: '1',
     username: 'Sarah K.',
-    userAvatar: 'https://placekitten.com/100/100',
-    image: 'https://placekitten.com/400/400',
+    userAvatar:
+      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRHqQAhr87cf9o3nfPj42O4loQ1oz8FBJIfJkYckRg2gjzwwu4BT3lqa4NVTDQpzIn7LFRhLPl9LJFL6qp_9i_f-A',
+    image:
+      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRHqQAhr87cf9o3nfPj42O4loQ1oz8FBJIfJkYckRg2gjzwwu4BT3lqa4NVTDQpzIn7LFRhLPl9LJFL6qp_9i_f-A',
     caption:
       "This sweater is amazing! The quality is outstanding and it's so warm.",
     likes: 42,
@@ -39,6 +41,19 @@ const MOCK_STORIES: Story[] = [
   // Add more mock stories here
 ]
 
+const createMockStory = (path: string): Story => {
+  return {
+    id: Math.random().toString(),
+    username: 'Sarah K.',
+    userAvatar:
+      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRHqQAhr87cf9o3nfPj42O4loQ1oz8FBJIfJkYckRg2gjzwwu4BT3lqa4NVTDQpzIn7LFRhLPl9LJFL6qp_9i_f-A',
+    image: path,
+    caption:
+      "This sweater is amazing! The quality is outstanding and it's so warm.",
+    likes: Math.floor(Math.random() * 200),
+    comments: Math.floor(Math.random() * 20),
+  }
+}
 interface StoryCardProps {
   story: Story
   onPress: () => void
@@ -84,9 +99,17 @@ export function StoriesScreen({
   navigation: NativeStackNavigationProp<any>
 }) {
   const [imageUrls, setImageUrls] = useState<string[]>([])
+  const [stories, setStories] = useState<Story[]>([])
   const handleCreateStory = () => {
     navigation.navigate('Stories.Create')
   }
+
+  useEffect(() => {
+    setStories(prevStories => [
+      ...prevStories,
+      ...imageUrls.map(url => createMockStory(url)),
+    ])
+  }, [imageUrls])
 
   const handleStoryPress = (storyId: string) => {
     navigation.navigate('Stories.Detail', {storyId})
@@ -109,7 +132,7 @@ export function StoriesScreen({
         </Box>
       </TouchableOpacity>
       <FlatList
-        data={MOCK_STORIES}
+        data={stories}
         keyExtractor={item => item.id}
         renderItem={({item}) => (
           <StoryCard story={item} onPress={() => handleStoryPress(item.id)} />
