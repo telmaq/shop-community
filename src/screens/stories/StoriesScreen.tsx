@@ -6,11 +6,12 @@ import {
   Image,
   Icon,
   Avatar,
-  useProductSearch,
 } from '@shopify/shop-minis-platform-sdk'
 import type {NativeStackNavigationProp} from '@react-navigation/native-stack'
 import {useState} from 'react'
 import Carousel from 'react-native-reanimated-carousel'
+
+import {MOCK_STORIES} from '../../data/mock-data'
 
 interface Story {
   id: string
@@ -21,6 +22,7 @@ interface Story {
   likes: number
   comments: number
   isLiked?: boolean
+  userId: string
 }
 
 interface StoryCardProps {
@@ -73,57 +75,12 @@ function StoryCard({story, onPress, onLike}: StoryCardProps) {
   )
 }
 
-const BLANK_IMAGE =
-  'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7'
-
-const MOCK_STORIES: Omit<Story, 'caption'>[] = [
-  {
-    id: '1',
-    username: 'Sarah K.',
-    userAvatar: 'https://ui-avatars.com/api/?name=Sarah+K&background=random',
-    images: [
-      'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=800',
-      'https://images.unsplash.com/photo-1483985988355-763728e1935b?w=800',
-    ],
-    likes: 42,
-    comments: 12,
-    isLiked: false,
-  },
-  {
-    id: '2',
-    username: 'John D.',
-    userAvatar: 'https://ui-avatars.com/api/?name=John+D&background=random',
-    images: [
-      'https://images.unsplash.com/photo-1475180098004-ca77a66827be?w=800',
-    ],
-    likes: 10,
-    comments: 10,
-    isLiked: false,
-  },
-  // Add more mock stories here
-]
-
 export function StoriesScreen({
   navigation,
 }: {
   navigation: NativeStackNavigationProp<any>
 }) {
-  const {products} = useProductSearch({
-    query: 'sweater',
-    first: 4,
-    filters: {
-      minimumRating: 4,
-      price: {
-        min: 150,
-        max: 250,
-      },
-    },
-  })
-
-  const [likedStories, setLikedStories] = useState<{[key: string]: boolean}>({})
-  const [likeCounts, setLikeCounts] = useState<{[key: string]: number}>(() =>
-    MOCK_STORIES.reduce((acc, story) => ({...acc, [story.id]: story.likes}), {})
-  )
+  const [stories, setStories] = useState(MOCK_STORIES)
 
   const handleCreateStory = () => {
     navigation.navigate('Stories.Create')
@@ -134,28 +91,22 @@ export function StoriesScreen({
   }
 
   const handleLike = (storyId: string) => {
-    setLikedStories(prev => ({
-      ...prev,
-      [storyId]: !prev[storyId],
-    }))
-    setLikeCounts(prev => ({
-      ...prev,
-      [storyId]: prev[storyId] + (likedStories[storyId] ? -1 : 1),
-    }))
+    setStories(prev =>
+      prev.map(story =>
+        story.id === storyId
+          ? {
+              ...story,
+              isLiked: !story.isLiked,
+              likes: story.isLiked ? story.likes - 1 : story.likes + 1,
+            }
+          : story
+      )
+    )
   }
-
-  const stories: Story[] = MOCK_STORIES.map((story, index) => ({
-    ...story,
-    caption: products?.[index]?.title ?? 'Loading...',
-    likes: likeCounts[story.id],
-  }))
 
   const renderItem = ({item}: {item: Story}) => (
     <StoryCard
-      story={{
-        ...item,
-        isLiked: likedStories[item.id],
-      }}
+      story={item}
       onPress={() => handleStoryPress(item.id)}
       onLike={() => handleLike(item.id)}
     />
