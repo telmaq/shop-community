@@ -25,9 +25,14 @@ const formatPrice = (price: number): string => {
 
 interface OrderHistoryScreenProps {
   navigation: NativeStackNavigationProp<any>
+  route: {params: {setImageUrls: (urls: string[]) => void, imageUrls: string[]}}
 }
 
-export const OrderHistoryScreen = ({navigation}: OrderHistoryScreenProps) => {
+export const OrderHistoryScreen = ({
+  navigation,
+  route,
+}: OrderHistoryScreenProps) => {
+  const {imageUrls, setImageUrls} = route.params
   // Filter delivered orders and sort by date (newest first)
   const sortedOrders = [...pastOrdersData.pastOrders]
     .filter(order => order.status === 'delivered')
@@ -47,7 +52,11 @@ export const OrderHistoryScreen = ({navigation}: OrderHistoryScreenProps) => {
       {
         text: 'Yes!',
         onPress: () => {
-          navigation.navigate('Stories.CreatePost', {product: item})
+          navigation.navigate('Stories.CreatePost', {
+            product: item,
+            imageUrls,
+            setImageUrls,
+          })
         },
       },
     ])

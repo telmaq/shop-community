@@ -185,7 +185,7 @@ export function StoriesScreen({
   }
 
   const handleHistoryPress = () => {
-    navigation.navigate('Orders.History')
+    navigation.navigate('Orders.History', {imageUrls, setImageUrls})
   }
 
   const handleStoryPress = (storyId: string) => {

@@ -4,9 +4,11 @@ import ImagePicker from 'react-native-image-crop-picker'
 export function OpenPhotosButton({
   setImageUrls,
   imageUrls,
+  onSuccess,
 }: {
   setImageUrls: (urls: string[]) => void
   imageUrls: string[]
+  onSuccess: () => void
 }) {
   const handleImageSelection = async () => {
     try {
@@ -15,24 +17,17 @@ export function OpenPhotosButton({
         height: 400,
         cropping: true,
       })
-      if (image?.path) {
-        setImageUrls([...imageUrls, image.path])
-      }
+      setImageUrls([...imageUrls, image.path])
+      onSuccess()
     } catch (error) {
-      // Ignore cancellation, only log other errors
-      if (
-        error instanceof Error &&
-        error.message !== 'User cancelled image selection'
-      ) {
-        console.error('Error selecting image:', error)
-      }
+      console.error('Error selecting image: ', error)
     }
   }
 
   return (
     <Button
       rightIcon="camera"
-      text="Add Pictures"
+      text="Add pictures"
       onPress={handleImageSelection}
     />
   )
