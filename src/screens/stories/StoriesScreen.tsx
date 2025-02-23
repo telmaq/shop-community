@@ -15,6 +15,8 @@ import {
   Avatar,
   Box,
   useAsyncStorage,
+  ProductLink,
+  useProductSearch,
 } from '@shopify/shop-minis-platform-sdk'
 import type {NativeStackNavigationProp} from '@react-navigation/native-stack'
 import Carousel from 'react-native-reanimated-carousel'
@@ -61,6 +63,18 @@ interface StoryCardProps {
 function StoryCard({story, onPress, onLike}: StoryCardProps) {
   const width = Dimensions.get('window').width - 32 // Account for padding
 
+  const {products} = useProductSearch({
+    query: 'skateboard',
+    first: 1,
+    filters: {
+      minimumRating: 4,
+      price: {
+        min: 150,
+        max: 250,
+      },
+    },
+  })
+
   return (
     <View style={styles.card}>
       <View style={styles.userInfo}>
@@ -85,11 +99,9 @@ function StoryCard({story, onPress, onLike}: StoryCardProps) {
 
       <Text style={styles.caption}>{story.caption}</Text>
 
-      {Boolean(story.hasProductLink) && (
-        <Box padding="m" style={styles.productLink}>
-          <Text>View Product →</Text>
-        </Box>
-      )}
+      {Boolean(story.hasProductLink) && products?.[0] ? (
+        <ProductLink product={products[0]} />
+      ) : null}
 
       <View style={styles.engagement}>
         <PressableAnimated onPress={onLike} style={styles.engagementItem}>
