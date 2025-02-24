@@ -1,6 +1,4 @@
-# Shop Stories Mini
-
-### Shop Minis Challenge: Shop Community
+# Shop Minis Challenge: Shop Community
 Shop Community introduces a new feature where buyers can explore a curated feed of posts, which showcases Shop buyers with their favorite Shop products.
 Users can interact with others' posts through likes and comments.
 Each post also includes a link to the showcased item, allowing buyers to quickly access product details and initate their purchase with just a tap.
