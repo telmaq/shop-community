@@ -51,6 +51,7 @@ const createMockStory = (path: string): Story => {
     likes: 0,
     comments: 0,
     isLiked: false,
+    hasProductLink: true,
   }
 }
 
@@ -162,10 +163,14 @@ export function StoriesScreen({
     loadUrls()
   }, [getItem])
 
-  // Add this effect to handle new stories from CreatePostScreen
+  // Update the useEffect that handles new stories
   useEffect(() => {
     if (route.params?.newStory) {
       setStories(prev => [route.params.newStory, ...prev])
+      // Also update imageUrls if needed
+      if (route.params.newStory.images[0]) {
+        setImageUrls(prev => [...prev, route.params.newStory.images[0]])
+      }
     }
   }, [route.params?.newStory])
 
@@ -288,9 +293,12 @@ export function StoriesScreen({
       />
       {filter === 'mine' && (
         <Box paddingHorizontal="section" paddingBottom="gutter">
-          <OpenPhotosButton 
-            imageUrls={imageUrls} 
+          <OpenPhotosButton
+            imageUrls={imageUrls}
             setImageUrls={handleNewImage}
+            onSuccess={() => {
+              navigation.navigate('Stories.Feed')
+            }}
           />
         </Box>
       )}
