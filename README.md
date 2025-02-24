@@ -5,7 +5,8 @@ Shop Community introduces a new feature where buyers can explore a curated feed 
 Users can interact with others' posts through likes and comments.
 Each post also includes a link to the showcased item, allowing buyers to quickly access product details and initate their purchase with just a tap.
 Just like your favorite social media platforms like Instagram or Tiktok, simply swipe to discover new items, personalized recommendations and hidden gems!
-Happy scrolling and shopping 😃!
+
+Happy scrolling and happy shopping 😃!
 
 ### Key Features
 - Create and share stories about purchased products
