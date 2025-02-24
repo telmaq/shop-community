@@ -1,4 +1,5 @@
 import {createNativeStackNavigator} from '@react-navigation/native-stack'
+import {LogBox} from 'react-native'
 
 import {HomeScreen} from './screens/HomeScreen'
 import {NativeFeaturesScreen} from './screens/NativeFeaturesScreen'
@@ -6,6 +7,9 @@ import {StoriesScreen} from './screens/stories/StoriesScreen'
 import {OrderHistoryScreen} from './screens/stories/OrderHistoryScreen'
 import {StoryCommentsScreen} from './screens/stories/StoryCommentsScreen'
 import {CreatePostScreen} from './screens/stories/CreatePostScreen'
+
+// Add this line to ignore the specific warning
+LogBox.ignoreLogs(['Non-serializable values were found in the navigation state'])
 
 const Stack = createNativeStackNavigator()
 
