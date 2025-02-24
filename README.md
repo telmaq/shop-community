@@ -22,6 +22,8 @@ Happy scrolling and happy shopping 😃!
 
 ## Demo
 
+https://web.descript.com/7aa707ef-9811-46d0-8f79-85ea4f5cce86/b45ed?editorVariant=default
+
 
 ## Getting Started
 1. Clone the repository
