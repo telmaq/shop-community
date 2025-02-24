@@ -1,8 +1,11 @@
 # Shop Stories Mini
 
-## Description
-Shop Stories is a social mini-app that allows users to share their shopping experiences through stories. 
-Users can post photos of products they've purchased, write captions, and interact with other shoppers' stories through likes and comments.
+### Shop Minis Challenge: Shop Community
+Shop Community introduces a new feature where buyers can explore a curated feed of posts, which showcases Shop buyers with their favorite Shop products.
+Users can interact with others' posts through likes and comments.
+Each post also includes a link to the showcased item, allowing buyers to quickly access product details and initate their purchase with just a tap.
+Just like your favorite social media platforms like Instagram or Tiktok, simply swipe to discover new items, personalized recommendations and hidden gems!
+Happy scrolling and shopping 😃!
 
 ### Key Features
 - Create and share stories about purchased products
@@ -21,27 +24,10 @@ Users can post photos of products they've purchased, write captions, and interac
 ## Demo
 
 
-## Technical Implementation
-Built using:
-- React Native
-- Shopify Shop Minis Platform SDK
-- React Navigation
-- Native image picking capabilities
-- AsyncStorage for data persistence
-
 ## Getting Started
 1. Clone the repository
 2. Install dependencies: `npm install`
 3. Run the development server: `npm start`
 4. Launch the app on your device or simulator
 
-## Future Enhancements
-- Real backend integration
-- Enhanced image editing capabilities
-- Social features like following users
-- Rich media support in comments
-- Integration with shop's product catalog
-- Analytics dashboard for merchants
 
-## License
-This project is private and proprietary. All rights reserved.
